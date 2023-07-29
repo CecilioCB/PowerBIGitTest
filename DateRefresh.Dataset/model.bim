@@ -1,0 +1,423 @@
+{
+  "compatibilityLevel": 1550,
+  "model": {
+    "annotations": [
+      {
+        "name": "PBI_QueryOrder",
+        "value": "[\"Stockholm\",\"DateStamp\",\"Summertime\",\"WinterTime\",\"Query1\"]"
+      },
+      {
+        "name": "__PBI_TimeIntelligenceEnabled",
+        "value": "0"
+      },
+      {
+        "name": "PBIDesktopVersion",
+        "value": "2.119.986.0 (23.07)"
+      },
+      {
+        "name": "PBI_ProTooling",
+        "value": "[\"DevMode\"]"
+      }
+    ],
+    "culture": "en-US",
+    "cultures": [
+      {
+        "name": "en-US",
+        "linguisticMetadata": {
+          "content": {
+            "DynamicImprovement": "HighConfidence",
+            "Language": "en-US",
+            "Version": "1.0.0"
+          },
+          "contentType": "json"
+        }
+      }
+    ],
+    "dataAccessOptions": {
+      "legacyRedirects": true,
+      "returnErrorValuesAsNull": true
+    },
+    "defaultPowerBIDataSourceVersion": "powerBI_V3",
+    "expressions": [
+      {
+        "name": "Summertime",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "DateTime"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Source = Date.StartOfWeek( #date(Date.Year(DateTime.LocalNow()),03,31),Day.Sunday) & #time(1,0,0)",
+          "in",
+          "    Source"
+        ],
+        "kind": "m",
+        "lineageTag": "edf32289-0e23-4142-b567-264b30e3e817"
+      },
+      {
+        "name": "WinterTime",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Date"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Source = Date.StartOfWeek( #date(Date.Year(DateTime.LocalNow()),10,31),Day.Sunday)",
+          "in",
+          "    Source"
+        ],
+        "kind": "m",
+        "lineageTag": "aa916ea6-7791-4f88-b592-71d2ecad216e"
+      },
+      {
+        "name": "Query1",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Source = #shared,",
+          "    #\"Converted to Table\" = Record.ToTable(Source),",
+          "    #\"Filtered Rows\" = Table.SelectRows(#\"Converted to Table\", each ([Name] = \"DateTimeZone.SwitchZone\"))",
+          "in",
+          "    #\"Filtered Rows\""
+        ],
+        "kind": "m",
+        "lineageTag": "76d9f362-445b-4bfc-8147-5b206266c422"
+      }
+    ],
+    "sourceQueryCulture": "en-SE",
+    "tables": [
+      {
+        "name": "DateStamp",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "columns": [
+          {
+            "name": "Latest refresh time stamp",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "a7dbac1c-3f80-4e36-a18c-830052d79b8f",
+            "sourceColumn": "Latest refresh time stamp",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Latest time refresh",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "expression": "FORMAT(DateStamp[Latest refresh time stamp], \"yyyy-mm-dd hh:nn:ss AMPM\")",
+            "isDataTypeInferred": true,
+            "lineageTag": "0a6a7bef-9f82-4bc5-805d-894037137670",
+            "summarizeBy": "none",
+            "type": "calculated"
+          }
+        ],
+        "lineageTag": "2a7c0b38-9383-41d9-a227-b22780cf9d91",
+        "measures": [
+          {
+            "name": "Hello",
+            "expression": "\"Hellow!\"",
+            "lineageTag": "977233fd-da4e-4273-9915-52dd72e04cf0"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "DateStamp",
+            "mode": "import",
+            "source": {
+              "expression": [
+                "let",
+                "    Summertime = Date.StartOfWeek( #date(Date.Year(DateTime.LocalNow()),03,31),Day.Sunday)& #time(1,0,0),",
+                "    Wintertime = Date.StartOfWeek( #date(Date.Year(DateTime.LocalNow()),10,31),Day.Sunday)& #time(1,0,0),",
+                "    today = DateTimeZone.RemoveZone( DateTimeZone.UtcNow()),",
+                "    TimeshipStamp = if today < Summertime and today < WinterTime then 1 else 2,",
+                "    Source = DateTimeZone.SwitchZone(DateTimeZone.From( DateTimeZone.UtcNow()),TimeshipStamp ,0),",
+                "    #\"Converted to Table\" = #table(1, {{Source}}),",
+                "    #\"Renamed Columns\" = Table.RenameColumns(#\"Converted to Table\",{{\"Column1\", \"Latest refresh time stamp\"}})",
+                "in",
+                "    #\"Renamed Columns\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Stockholm",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "columns": [
+          {
+            "name": "abbreviation",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "3668ad4d-96ff-4efd-9ff2-9c2d8c8bbfc9",
+            "sourceColumn": "abbreviation",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "client_ip",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "88e90570-d96a-41fb-bceb-404060bbdb1b",
+            "sourceColumn": "client_ip",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "datetime",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "General Date",
+            "lineageTag": "c223a90e-bd91-4d06-af45-734618f4e7ab",
+            "sourceColumn": "datetime",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "day_of_week",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "84ef1f09-bc3b-4f60-82fb-9d25b67b1220",
+            "sourceColumn": "day_of_week",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "day_of_year",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "5feb135f-63cc-4407-9197-2bd1f7ca2f04",
+            "sourceColumn": "day_of_year",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "dst",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "boolean",
+            "formatString": "\"TRUE\";\"TRUE\";\"FALSE\"",
+            "lineageTag": "0221ffc0-a350-4194-a198-3e19369b12d2",
+            "sourceColumn": "dst",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "dst_from",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "General Date",
+            "lineageTag": "9d29de20-2a6f-4d6c-bf65-edba131dc0bf",
+            "sourceColumn": "dst_from",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "dst_offset",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "87868ba4-d64b-4bad-8b70-98e62f0b5b3b",
+            "sourceColumn": "dst_offset",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "dst_until",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "General Date",
+            "lineageTag": "74b779ef-24df-4a10-adb5-2d1f7ff56f76",
+            "sourceColumn": "dst_until",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "raw_offset",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "21180e4e-c5ef-4c44-b93b-e714154e9c2a",
+            "sourceColumn": "raw_offset",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "timezone",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "d76f9ac2-460e-4674-ad01-6c6a7ce844db",
+            "sourceColumn": "timezone",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "unixtime",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "049e7efb-d23f-49b3-b974-97288a7438c3",
+            "sourceColumn": "unixtime",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "utc_datetime",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "General Date",
+            "lineageTag": "c38720b5-8dd5-4338-bb66-4eaa400cf575",
+            "sourceColumn": "utc_datetime",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "utc_offset",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "891aa81f-9e3c-4026-bb0b-09caac648276",
+            "sourceColumn": "utc_offset",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "week_number",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "74a3d002-5f9b-4431-9867-024073e09a59",
+            "sourceColumn": "week_number",
+            "summarizeBy": "sum"
+          }
+        ],
+        "lineageTag": "2cfee560-bf1c-4c99-b140-3cff878ae77e",
+        "partitions": [
+          {
+            "name": "Stockholm",
+            "mode": "import",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = Json.Document(Web.Contents(\"http://worldtimeapi.org/api/timezone/Europe/Stockholm\")),",
+                "    #\"Converted to Table\" = Table.FromRecords({Source}),",
+                "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Converted to Table\",{{\"abbreviation\", type text}, {\"client_ip\", type text}, {\"datetime\", type datetimezone}, {\"day_of_week\", Int64.Type}, {\"day_of_year\", Int64.Type}, {\"dst\", type logical}, {\"dst_from\", type datetime}, {\"dst_offset\", Int64.Type}, {\"dst_until\", type datetime}, {\"raw_offset\", Int64.Type}, {\"timezone\", type text}, {\"unixtime\", Int64.Type}, {\"utc_datetime\", type datetime}, {\"utc_offset\", type text}, {\"week_number\", Int64.Type}})",
+                "in",
+                "    #\"Changed Type\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
